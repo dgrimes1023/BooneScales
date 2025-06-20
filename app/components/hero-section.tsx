@@ -32,10 +32,12 @@ export default function HeroSection() {
             Boone Scales creates fast, responsive, and modern websites for small businesses.
           </p>
 
-          <button className="group bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-sm text-lg font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-red-600/25 flex items-center mx-auto">
-            Get a Free Quote
-            <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-          </button>
+          <div className="flex justify-center">
+            <a href="#contact" className="group bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-sm text-lg font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-red-600/25 flex items-center w-fit cursor-pointer">
+              Get a Free Quote
+              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+            </a>
+          </div>
         </div>
       </div>
     </section>

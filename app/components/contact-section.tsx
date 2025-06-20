@@ -55,7 +55,7 @@ export default function ContactSection() {
                 </div>
                 <div>
                   <p className="text-white font-medium">Email</p>
-                  <p className="text-gray-400">hello@boonescales.com</p>
+                  <p className="text-gray-400">info@boonescales.com</p>
                 </div>
               </div>
 
@@ -65,7 +65,7 @@ export default function ContactSection() {
                 </div>
                 <div>
                   <p className="text-white font-medium">Phone</p>
-                  <p className="text-gray-400">+1 (555) 123-4567</p>
+                  <p className="text-gray-400">+1 (330) 581-8990</p>
                 </div>
               </div>
 
@@ -75,7 +75,7 @@ export default function ContactSection() {
                 </div>
                 <div>
                   <p className="text-white font-medium">Location</p>
-                  <p className="text-gray-400">Remote & On-site Available</p>
+                  <p className="text-gray-400">Alliance, OH</p>
                 </div>
               </div>
             </div>
