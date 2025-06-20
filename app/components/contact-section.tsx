@@ -4,21 +4,65 @@ import type React from "react"
 
 import { useState } from "react"
 import { Send, Mail, Phone, MapPin } from "lucide-react"
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({
     name: "",
+    phone: "",
     email: "",
     message: "",
   })
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    // Handle form submission here
-    console.log("Form submitted:", formData)
-  }
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    // Validate phone number: must be in (xxx) xxx-xxxx format
+    const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
+    if (!phoneRegex.test(formData.phone)) {
+      setStatus("error");
+      return;
+    }
+    setStatus("loading");
+    try {
+      // Send only digits for phone to backend, or keep as formatted string if you want
+      const cleanPhone = formData.phone.replace(/\D/g, "");
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...formData, phone: formData.phone }),
+      });
+      if (res.ok) {
+        setStatus("success");
+        setFormData({ name: "", phone: "", email: "", message: "" });
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    // Format phone number as (xxx) xxx-xxxx while typing
+    if (e.target.name === "phone") {
+      let value = e.target.value.replace(/\D/g, "");
+      if (value.length > 10) value = value.slice(0, 10);
+      let formatted = value;
+      if (value.length > 6) {
+        formatted = `(${value.slice(0, 3)}) ${value.slice(3, 6)}-${value.slice(6)}`;
+      } else if (value.length > 3) {
+        formatted = `(${value.slice(0, 3)}) ${value.slice(3)}`;
+      } else if (value.length > 0) {
+        formatted = `(${value}`;
+      }
+      setFormData({
+        ...formData,
+        phone: formatted,
+      });
+      return;
+    }
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -27,6 +71,21 @@ export default function ContactSection() {
 
   return (
     <section id="contact" className="py-20 bg-gradient-to-b from-gray-900 to-black">
+      {/* Success Popup Dialog */}
+      <Dialog open={status === "success"} onOpenChange={(open) => { if (!open) setStatus("idle") }}>
+        <DialogContent className="max-w-sm p-6 text-center">
+          <DialogTitle asChild>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Message Received!</h3>
+          </DialogTitle>
+          <div className="mb-4">
+            <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-red-100 mx-auto mb-2">
+              <svg className="w-7 h-7 text-red-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>
+            </span>
+            <p className="mt-2 text-gray-600 dark:text-gray-300">Thank you for reaching out. We have received your message and will be in contact soon.</p>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl sm:text-5xl font-bold text-white mb-6">
@@ -113,6 +172,26 @@ export default function ContactSection() {
                   required
                   className="w-full px-4 py-3 bg-black border border-gray-700 rounded-sm text-white placeholder-gray-500 focus:border-red-500 focus:outline-none transition-colors duration-200"
                   placeholder="your@email.com"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="phone" className="block text-sm font-medium text-gray-300 mb-2">
+                  Phone Number
+                </label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  required
+                  pattern="\(\d{3}\) \d{3}-\d{4}"
+                  maxLength={14}
+                  minLength={14}
+                  className="w-full px-4 py-3 bg-black border border-gray-700 rounded-sm text-white placeholder-gray-500 focus:border-red-500 focus:outline-none transition-colors duration-200"
+                  placeholder="(xxx) xxx-xxxx"
+                  inputMode="numeric"
                 />
               </div>
 
