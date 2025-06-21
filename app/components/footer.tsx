@@ -1,11 +1,10 @@
-import { Github, Twitter, Linkedin, Mail } from "lucide-react"
+import { Linkedin, Mail, Instagram } from "lucide-react"
 
 export default function Footer() {
   const socialLinks = [
-    { icon: Github, href: "#", label: "GitHub" },
-    { icon: Twitter, href: "#", label: "Twitter" },
-    { icon: Linkedin, href: "#", label: "LinkedIn" },
-    { icon: Mail, href: "#", label: "Email" },
+    { icon: Instagram, href: "https://www.instagram.com/boonescales", label: "Instagram" },
+    { icon: Linkedin, href: "https://www.linkedin.com/in/daniel-grimes1023", label: "LinkedIn" },
+    { icon: Mail, href: "mailto:info@boonescales.com", label: "Email" },
   ]
 
   return (
@@ -50,6 +49,8 @@ export default function Footer() {
                   key={index}
                   href={social.href}
                   aria-label={social.label}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-10 h-10 bg-gray-800 hover:bg-red-600 rounded-sm flex items-center justify-center transition-colors duration-300 group"
                 >
                   <social.icon className="w-5 h-5 text-gray-400 group-hover:text-white" />
